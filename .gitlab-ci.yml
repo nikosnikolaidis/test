@@ -1,0 +1,26 @@
+# The Node and Data are going to be added dynamicaly
+
+image: python:latest
+
+before_script:
+  - python --version  # For debugging
+
+quality-job:       # This job runs in the test stage
+  stage: test
+  script:
+    - echo "Test stage..."
+    - echo "Quality Analysis Job"
+    - echo "1. Code assessment"
+    - echo "user=$GITLAB_USER_LOGIN"
+    - 'curl --request POST "http://rch-dev1.raise-science.eu:8083/project_analysis?gitUrl=$CI_PROJECT_URL&branch=develop&citoken=$CI_JOB_TOKEN"'
+    - echo "2. Quality metrics"
+    - echo "3. Technical Debt"
+    - echo "(4. Project comparison)"
+
+security-job:       # This job runs in the test stage
+  stage: test
+  script:
+    - echo "Test stage..."
+    - echo "Security Analysis Job"
+    - 'curl --request POST -H "x-cyclopt-token: $CI_ANALYZER_PROXY_TOKEN" "https://code-analyses.raise-science.eu/security-proxy/static?gitUrl=$CI_PROJECT_URL&branch=develop&token=$CI_ANALYZER_TOKEN"'
+    - echo "Any API request or analysis will be added here...."
